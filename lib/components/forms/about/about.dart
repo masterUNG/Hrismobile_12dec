@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hrismobile/utility/app_constant.dart';
+import 'package:hrismobile/widget/widget_image.dart';
+import 'package:hrismobile/widget/widget_text.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -60,14 +63,14 @@ class _About extends State<About> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('lib/assets/images/logo22.png'),
+                    const WidgetImage(),
                     //const FlutterLogo(size: 100),
                     _gap(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        "ข้อกำหนดการใช้งาน",
-                        style: Theme.of(context).textTheme.headline5,
+                      child: WidgetText(
+                        text: "ข้อกำหนดการใช้งาน",
+                        textStyle: AppConstant().h1Style(context: context),
                       ),
                     ),
                     Padding(
@@ -103,7 +106,8 @@ class _About extends State<About> {
                             showAlertDialog_Load(context);
                             //
                             try {
-                              http.Response response1 = await CHK_SERVER1("Android/IOS", _imeiNumber.toString());
+                              http.Response response1 = await CHK_SERVER1(
+                                  "Android/IOS", _imeiNumber.toString());
                               if (response1.statusCode == 200) {
                                 //
                                 Navigator.pop(context);
@@ -192,7 +196,6 @@ Future<http.Response> CHK_SERVER1(String Channel, String IMEI) async {
     "APIKEY": "0oBAu+z60h8stTDYRiMqOtusMGW2Zei3",
     "Content-Type": "application/json; charset=UTF-8"
   };
-
 
   Map<String, String> body = {"Channel": Channel, "IMEI": IMEI};
   String requestBody = convert.jsonEncode(body);
