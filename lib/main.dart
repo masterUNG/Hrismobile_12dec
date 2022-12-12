@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hrismobile/components/forms/about/about.dart';
+import 'package:hrismobile/main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Map<String, Widget> _components = {'/': const About()};
+// Map<String, Widget> _components = {'/': const About()};
+Map<String, Widget> _components = {'/': const MainPage()};
 
 class _HomePage extends StatelessWidget {
   const _HomePage({Key? key}) : super(key: key);

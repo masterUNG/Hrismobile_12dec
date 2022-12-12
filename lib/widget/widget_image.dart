@@ -13,10 +13,13 @@ class WidgetImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      'lib/assets/images/logo22.png',
+    return SizedBox(
       width: width,
       height: height,
+      child: Image.asset(
+        'lib/assets/images/logo22.png',
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

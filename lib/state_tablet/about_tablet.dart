@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hrismobile/components/forms/link/link.dart';
 import 'package:hrismobile/utility/app_constant.dart';
 import 'package:hrismobile/widget/widget_image.dart';
 import 'package:hrismobile/widget/widget_text.dart';
@@ -9,16 +10,16 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-import '../link/link.dart';
 
-class About extends StatefulWidget {
-  const About({Key? key}) : super(key: key);
+
+class AboutTablet extends StatefulWidget {
+  const AboutTablet({Key? key}) : super(key: key);
 
   @override
-  State<About> createState() => _About();
+  State<AboutTablet> createState() => _About();
 }
 
-class _About extends State<About> {
+class _About extends State<AboutTablet> {
   String? _imeiNumber = "";
   String? _server = "";
   @override
@@ -49,57 +50,40 @@ class _About extends State<About> {
         return Form(
           key: _formKey,
           child: Container(
-            decoration: AppConstant().imageBox(path: AppConstant.pathImageVer),
+            decoration: AppConstant().imageBox(path: AppConstant.pathImageHor),
             width: boxConstraints.maxWidth,
             height: boxConstraints.maxHeight,
-            child: Stack(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  margin: EdgeInsets.only(top: boxConstraints.maxHeight * 0.05),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      WidgetImage(),
-                    ],
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Card(
-                          elevation: 8,
-                          child: Container(
-                            padding: const EdgeInsets.all(32.0),
-                            constraints: const BoxConstraints(maxWidth: 350),
-                            /*
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(image: AssetImage("lib/assets/images/BG.jpg"),
-                                  fit: BoxFit.cover,
-                                )),*/
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // const WidgetImage(),
-                                  //const FlutterLogo(size: 100),
-                                  _gap(),
-                                  titleHead(context),
-                                  showDetail(context),
-                                  _gap(),
-                                  bottonExcept(context),
-                                  textVersion(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                WidgetImage(width: 350,height: 350,),
+                const SizedBox(width: 36,),
+                Card(
+                  elevation: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(32.0),
+                    constraints: const BoxConstraints(maxWidth: 350),
+                    /*
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(image: AssetImage("lib/assets/images/BG.jpg"),
+                          fit: BoxFit.cover,
+                        )),*/
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // const WidgetImage(),
+                          //const FlutterLogo(size: 100),
+                          _gap(),
+                          titleHead(context),
+                          showDetail(context),
+                          _gap(),
+                          bottonExcept(context),
+                          textVersion(),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -126,45 +110,27 @@ class _About extends State<About> {
           ),
         ),
         onPressed: () async {
-          bool status = true;
-
           if (_formKey.currentState?.validate() ?? false) {
             showAlertDialog_Load(context);
             //
             try {
-              // http.Response response1 =
-              //     await CHK_SERVER1("Android/IOS", _imeiNumber.toString());
-              // if (response1.statusCode == 200) {
-              //   //
-              //   Navigator.pop(context);
-              //   status = false;
-              //   showAlertDialog(
-              //       context, "ท่านจงเตรียมข้อมูลเพื่อที่จะต้องลงทะเบียน");
-              // } else if (response1.statusCode == 404) {
-              //   // Navigator.pop(context);
-              //   http.Response response2 =
-              //       await CHK_SERVER2("Android/IOS", _imeiNumber.toString());
-              //   if (response2.statusCode == 200) {
-              //     Navigator.pop(context);
-              //     status = false;
-              //     showAlertDialog(
-              //         context, "ท่านจงเตรียมข้อมูลเพื่อที่จะต้องลงทะเบียน");
-              //   }
-              // }
-
-              await Future.delayed(const Duration(seconds: 5), (() {
-                print('Time Out');
-                if (status) {
+              http.Response response1 =
+                  await CHK_SERVER1("Android/IOS", _imeiNumber.toString());
+              if (response1.statusCode == 200) {
+                //
+                Navigator.pop(context);
+                showAlertDialog(
+                    context, "ท่านจงเตรียมข้อมูลเพื่อที่จะต้องลงทะเบียน");
+              } else if (response1.statusCode == 404) {
+                Navigator.pop(context);
+                http.Response response2 =
+                    await CHK_SERVER2("Android/IOS", _imeiNumber.toString());
+                if (response2.statusCode == 200) {
                   Navigator.pop(context);
-                  showAlertDialog(context, 'Please Try Again Server Very Busy',
-                      actionWidget: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel'),
-                      ));
+                  showAlertDialog(
+                      context, "ท่านจงเตรียมข้อมูลเพื่อที่จะต้องลงทะเบียน");
                 }
-              }));
+              }
             } on Exception {
               Navigator.pop(context);
               http.Response response2 =
@@ -210,7 +176,7 @@ class _About extends State<About> {
   Widget _gap() => const SizedBox(height: 16);
 }
 
-showAlertDialog(BuildContext context, String error, {Widget? actionWidget}) {
+showAlertDialog(BuildContext context, String error) {
   // set up the button
   Widget okButton = TextButton(
     child: Text("OK"),
@@ -226,7 +192,7 @@ showAlertDialog(BuildContext context, String error, {Widget? actionWidget}) {
     //content: Text("ไม่สามารถลงทะเบียนได้เนื่องจากข้อมูลไม่ตรงกับระบบ"),
     content: Text(error),
     actions: [
-      actionWidget ?? okButton,
+      okButton,
     ],
   );
 
@@ -291,7 +257,7 @@ showAlertDialog_alert(BuildContext context) {
     child: Text("OK"),
     onPressed: () {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => About()));
+          .push(MaterialPageRoute(builder: (context) => AboutTablet()));
     },
   );
 
@@ -339,7 +305,7 @@ showAlertDialog_connect(BuildContext context) {
     child: Text("OK"),
     onPressed: () {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => About()));
+          .push(MaterialPageRoute(builder: (context) => AboutTablet()));
     },
   );
 
